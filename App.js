@@ -13,10 +13,8 @@ export default function App() {
       try {
         dispatch({ type: "CALLING" });
         const photos = await getImageList();
-        console.log(photos);
         dispatch({ type: "LOADED", data: photos });
       } catch (error) {
-        console.error(error);
         dispatch({ type: "ERROR" });
       }
     }

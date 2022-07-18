@@ -4,8 +4,9 @@ import { Dimensions, StyleSheet, useWindowDimensions } from "react-native";
 import ModalPhoto from "./ModalPhoto";
 
 const PhotoGallery = ({ photos }) => {
-  const [ screenWidth, setScreenWidth ] = useState(Dimensions.get("screen").width);
-  const window = useWindowDimensions(); 
+  const window = useWindowDimensions();
+  const [imageModal, setImageModal] = useState(undefined);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View>
@@ -14,7 +15,7 @@ const PhotoGallery = ({ photos }) => {
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View
+          <Pressable 
             style={{
               width: (window.width / 2) - 24,
               height: (window.width / 2) - 24,
@@ -25,6 +26,10 @@ const PhotoGallery = ({ photos }) => {
               borderRadius: 10,
               position: 'relative'
             }}
+            onPress={() => {
+              setImageModal(item);
+              setModalVisible(true);
+            }}
           >
             <Image
               alt={item.download_url}
@@ -34,18 +39,25 @@ const PhotoGallery = ({ photos }) => {
                 uri: item.download_url
               }}
             />
-            <Center
-              style={styles.Center}
-            >
+            <Center style={styles.Center}>
               <Text style={{
                 color: 'white',
                 fontWeight: 'bold'
               }}>{item.author}</Text>
             </Center>
-          </View>
+          </Pressable>
         )}
       />
-      <ModalPhoto />
+      { 
+        imageModal &&
+          <ModalPhoto
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            imageModal={imageModal}
+            setImageModal={setImageModal}
+            window={window}
+          />
+      }
     </View>
   );
 };
